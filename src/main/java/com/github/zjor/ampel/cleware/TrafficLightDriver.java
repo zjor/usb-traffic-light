@@ -1,4 +1,4 @@
-package com.github.zjor.ampel;
+package com.github.zjor.ampel.cleware;
 
 import javax.usb.UsbControlIrp;
 import javax.usb.UsbDevice;
@@ -23,8 +23,6 @@ public class TrafficLightDriver {
     public static final byte COLOR_RED = 0x10;
     public static final byte COLOR_YELLOW = 0x11;
     public static final byte COLOR_GREEN = 0x12;
-
-    public static final byte[] COLORS = new byte[] {COLOR_RED, COLOR_YELLOW, COLOR_GREEN};
 
     private UsbDevice device;
 

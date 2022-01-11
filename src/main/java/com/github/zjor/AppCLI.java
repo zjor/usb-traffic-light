@@ -1,10 +1,10 @@
 package com.github.zjor;
 
-import com.github.zjor.ampel.TrafficLightController;
+import com.github.zjor.ampel.cleware.TrafficLight;
 
-public class App {
+public class AppCLI {
     public static void main(String[] args) throws InterruptedException {
-        TrafficLightController light = new TrafficLightController();
+        TrafficLight light = new TrafficLight();
         Thread t = new Thread(new Worker(light));
         t.start();
 
@@ -21,9 +21,9 @@ public class App {
 
         int time;
 
-        private TrafficLightController controller;
+        private TrafficLight controller;
 
-        Worker(TrafficLightController controller) {
+        Worker(TrafficLight controller) {
             this.controller = controller;
         }
 
@@ -32,9 +32,11 @@ public class App {
             while (true) {
                 try {
                     Thread.sleep(DELAY);
-                    controller.getRed().set(redPattern[time % 4]);
-                    controller.getYellow().set(yellowPattern[time % 4]);
-                    controller.getGreen().set(greenPattern[time % 4]);
+                    controller.setState(
+                            redPattern[time % 4],
+                            yellowPattern[time % 4],
+                            greenPattern[time % 4]
+                    );
 
                     time++;
                 } catch (InterruptedException e) {

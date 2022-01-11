@@ -1,5 +1,8 @@
-# clewareampel-java
-Cleware USB-Ampel driver
+# Traffic Light API
+
+- URL: `http://localhost:8080/swagger-ui/`
+
+## Cleware USB-Ampel driver
 
 Code to control Cleware USB-Ampel with Java
 
