@@ -1,7 +1,7 @@
-package edu.royz.cleware.ampel;
+package com.github.zjor.ampel;
 
-import static edu.royz.cleware.ampel.TrafficLightDriver.VALUE_OFF;
-import static edu.royz.cleware.ampel.TrafficLightDriver.VALUE_ON;
+import static com.github.zjor.ampel.TrafficLightDriver.VALUE_OFF;
+import static com.github.zjor.ampel.TrafficLightDriver.VALUE_ON;
 
 public class Indicator {
 

@@ -1,6 +1,6 @@
-package edu.royz;
+package com.github.zjor;
 
-import edu.royz.cleware.ampel.TrafficLightController;
+import com.github.zjor.ampel.TrafficLightController;
 
 public class App {
     public static void main(String[] args) throws InterruptedException {

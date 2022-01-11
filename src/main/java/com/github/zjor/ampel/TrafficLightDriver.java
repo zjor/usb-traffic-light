@@ -1,4 +1,4 @@
-package edu.royz.cleware.ampel;
+package com.github.zjor.ampel;
 
 import javax.usb.UsbControlIrp;
 import javax.usb.UsbDevice;

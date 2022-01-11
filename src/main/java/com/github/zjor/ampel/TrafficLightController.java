@@ -1,6 +1,6 @@
-package edu.royz.cleware.ampel;
+package com.github.zjor.ampel;
 
-import static edu.royz.cleware.ampel.TrafficLightDriver.*;
+import static com.github.zjor.ampel.TrafficLightDriver.*;
 
 /**
  * Provides abstraction layer over Traffic Light.
