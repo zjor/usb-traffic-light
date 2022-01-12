@@ -1,5 +1,7 @@
 package com.github.zjor.ampel.cleware;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.usb.UsbControlIrp;
 import javax.usb.UsbDevice;
 import javax.usb.UsbDeviceDescriptor;
@@ -12,6 +14,7 @@ import java.util.List;
 /**
  * Provides low-level access to USB device
  */
+@Slf4j
 public class TrafficLightDriver {
 
     public static final short PRODUCT_ID = 0x8;
@@ -31,9 +34,11 @@ public class TrafficLightDriver {
             final UsbServices services = UsbHostManager.getUsbServices();
             device = find(services.getRootUsbHub());
             if (device == null) {
+                log.error("Cleware USB-Ampel was not found");
                 throw new RuntimeException("Cleware USB-Ampel was not found");
             }
         } catch (UsbException e) {
+            log.error("USB-Ampel init failed: " + e.getMessage(), e);
             throw new RuntimeException(e.getMessage(), e);
         }
     }

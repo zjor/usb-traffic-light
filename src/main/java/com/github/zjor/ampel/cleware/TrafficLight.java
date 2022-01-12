@@ -1,11 +1,14 @@
 package com.github.zjor.ampel.cleware;
 
+import lombok.extern.slf4j.Slf4j;
+
 import static com.github.zjor.ampel.cleware.TrafficLightDriver.*;
 
 /**
  * Provides abstraction layer over Traffic Light.
  * Maintains state of the device.
  */
+@Slf4j
 public class TrafficLight {
 
     private TrafficLightDriver driver;
