@@ -8,25 +8,61 @@
 <h1>Hello world</h1>
 
 <script>
-  window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  const recognition = new SpeechRecognition();
-  recognition.interimResults = true;
-  recognition.lang = 'en-US';
 
-  recognition.addEventListener('result', e => {
-    const transcript = Array.from(e.results)
-      .map(result => result[0])
-      .map(result => result.transcript)
-      .join('');
-    console.log(transcript, e.results[0].isFinal);
+    class TrafficLightClient {
+        constructor(baseUrl) {
+            this.baseUrl = baseUrl;
+        }
 
-  });
+        async getTrafficLightState() {
+            const res = await fetch(`${this.baseUrl}/api/traffic-light/state`);
+            return res.json();
+        }
 
-  recognition.addEventListener('end', recognition.start);
+        async setTrafficLightState(red, yellow, green) {
+            const data = {red, yellow, green}
+            const res = await fetch(`${this.baseUrl}/api/traffic-light/state`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            return res.json()
+        }
+    }
 
-  recognition.start();
+    const client = new TrafficLightClient('http://localhost:8080');
 
-</script>    
+    const COMMAND_RED = 'красный';
+    const COMMAND_YELLOW = 'жёлтый';
+    const COMMAND_GREEN = 'зеленый';
+
+    window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.interimResults = true;
+    // recognition.lang = 'en-US';
+    recognition.lang = 'ru-RU';
+
+    recognition.addEventListener('result', async e => {
+        const transcript = Array.from(e.results)
+            .map(result => result[0])
+            .map(result => result.transcript)
+            .join('');
+        if (e.results[0].isFinal) {
+            console.log(transcript);
+            console.log(await client.getTrafficLightState());
+            if (transcript.toLowerCase() == COMMAND_RED) {
+
+            }
+
+        }
+    });
+
+    recognition.addEventListener('end', recognition.start);
+    recognition.start();
+
+</script>
 
 </body>
 </html>
