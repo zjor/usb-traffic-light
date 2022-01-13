@@ -32,6 +32,16 @@
         }
     }
 
+    async function handleVoiceCommand(command, client) {
+        if (command == COMMAND_RED) {
+            await client.setTrafficLightState(true, false, false);
+        } else if (command == COMMAND_YELLOW) {
+            await client.setTrafficLightState(false, true, false);
+        } else if (command == COMMAND_GREEN) {
+            await client.setTrafficLightState(false, false, true);
+        }
+    }
+
     const client = new TrafficLightClient('http://localhost:8080');
 
     const COMMAND_RED = 'красный';
@@ -51,11 +61,7 @@
             .join('');
         if (e.results[0].isFinal) {
             console.log(transcript);
-            console.log(await client.getTrafficLightState());
-            if (transcript.toLowerCase() == COMMAND_RED) {
-
-            }
-
+            await handleVoiceCommand(transcript.toLocaleString().trim(), client);
         }
     });
 
