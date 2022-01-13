@@ -1,10 +1,13 @@
 package com.github.zjor;
 
 import com.github.zjor.ampel.cleware.TrafficLight;
+import com.github.zjor.ampel.cleware.TrafficLightDriver;
 
 public class AppCLI {
     public static void main(String[] args) throws InterruptedException {
-        TrafficLight light = new TrafficLight();
+        TrafficLightDriver driver = new TrafficLightDriver();
+        driver.init();
+        TrafficLight light = new TrafficLight(driver);
         Thread t = new Thread(new Worker(light));
         t.start();
 

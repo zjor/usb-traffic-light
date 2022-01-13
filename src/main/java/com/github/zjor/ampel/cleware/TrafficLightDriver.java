@@ -1,5 +1,6 @@
 package com.github.zjor.ampel.cleware;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.usb.UsbControlIrp;
@@ -29,6 +30,9 @@ public class TrafficLightDriver {
 
     private UsbDevice device;
 
+    @Getter
+    private boolean initialized = false;
+
     public void init() {
         try {
             final UsbServices services = UsbHostManager.getUsbServices();
@@ -37,6 +41,7 @@ public class TrafficLightDriver {
                 log.error("Cleware USB-Ampel was not found");
                 throw new RuntimeException("Cleware USB-Ampel was not found");
             }
+            initialized = true;
         } catch (UsbException e) {
             log.error("USB-Ampel init failed: " + e.getMessage(), e);
             throw new RuntimeException(e.getMessage(), e);
@@ -67,13 +72,22 @@ public class TrafficLightDriver {
     }
 
     protected void write(byte color, byte value) {
+        if (!initialized) {
+            log.error("TrafficLightDriver is not initialized");
+            throw new IllegalStateException("not initialized");
+        }
         UsbControlIrp irp = device.createUsbControlIrp((byte) 0x21, (byte) 0x09, (short) 0x200, (short) 0x00);
         irp.setData(new byte[]{0x00, color, value});
         try {
             device.syncSubmit(irp);
         } catch (UsbException e) {
+            log.error("USB-Ampel write failed: " + e.getMessage(), e);
             throw new RuntimeException(e.getMessage(), e);
         }
+    }
+
+    protected void write(byte color, boolean isEnabled) {
+        write(color, isEnabled ? VALUE_ON : VALUE_OFF);
     }
 
 }

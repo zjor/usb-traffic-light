@@ -1,6 +1,7 @@
 package com.github.zjor.config;
 
 import com.github.zjor.ampel.cleware.TrafficLight;
+import com.github.zjor.ampel.cleware.TrafficLightDriver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -8,8 +9,13 @@ import org.springframework.context.annotation.Configuration;
 public class ApplicationConfiguration {
 
     @Bean
-    public TrafficLight trafficLight() {
-        return new TrafficLight();
+    public TrafficLightDriver trafficLightDriver() {
+        return new TrafficLightDriver();
+    }
+
+    @Bean
+    public TrafficLight trafficLight(TrafficLightDriver driver) {
+        return new TrafficLight(driver);
     }
 
 }

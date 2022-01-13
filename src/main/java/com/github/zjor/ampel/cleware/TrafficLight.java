@@ -2,8 +2,6 @@ package com.github.zjor.ampel.cleware;
 
 import lombok.extern.slf4j.Slf4j;
 
-import static com.github.zjor.ampel.cleware.TrafficLightDriver.*;
-
 /**
  * Provides abstraction layer over Traffic Light.
  * Maintains state of the device.
@@ -11,35 +9,30 @@ import static com.github.zjor.ampel.cleware.TrafficLightDriver.*;
 @Slf4j
 public class TrafficLight {
 
-    private TrafficLightDriver driver;
+    private final TrafficLightDriver driver;
 
-    private Indicator red, yellow, green;
+    /**
+     * [red, yellow, green]
+     */
+    private boolean[] state = new boolean[]{false, false, false};
 
-    public TrafficLight() {
-        driver = new TrafficLightDriver();
-        driver.init();
-
-        red = new Indicator(driver, COLOR_RED);
-        yellow = new Indicator(driver, COLOR_YELLOW);
-        green = new Indicator(driver, COLOR_GREEN);
-
-        red.setEnabled(false);
-        yellow.setEnabled(false);
-        green.setEnabled(false);
+    public TrafficLight(TrafficLightDriver driver) {
+        this.driver = driver;
     }
 
     public TrafficLightState getState() {
-        return new TrafficLightState(red.isEnabled(), yellow.isEnabled(), green.isEnabled());
+        return new TrafficLightState(state[0], state[1], state[2]);
     }
 
     public void setState(TrafficLightState state) {
-        red.setEnabled(state.isRed());
-        yellow.setEnabled(state.isYellow());
-        green.setEnabled(state.isGreen());
+        setState(state.isRed(), state.isYellow(), state.isGreen());
     }
 
     public void setState(boolean red, boolean yellow, boolean green) {
-        setState(new TrafficLightState(red, yellow, green));
+        driver.write(TrafficLightDriver.COLOR_RED, red);
+        driver.write(TrafficLightDriver.COLOR_YELLOW, yellow);
+        driver.write(TrafficLightDriver.COLOR_GREEN, green);
+        state = new boolean[]{red, yellow, green};
     }
 
 }
