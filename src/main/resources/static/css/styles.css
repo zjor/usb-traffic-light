@@ -29,15 +29,3 @@ html, body {
     border: black 3px solid;
     border-radius: 50px;
 }
-
-.red {
-    background-color: red;
-}
-
-.yellow {
-    background-color: yellow;
-}
-
-.green {
-    background-color: green;
-}

@@ -8,10 +8,10 @@
 </head>
 <body>
 <div class="container">
-    <div class="traffic-light">
-        <div class="indicator red"></div>
-        <div class="indicator yellow"></div>
-        <div class="indicator green"></div>
+    <div class="traffic-light" id="traffic-light">
+        <div class="indicator" v-bind:style="{ backgroundColor: red ? 'red' : 'rgba(255, 0, 0, 0.1)'}"></div>
+        <div class="indicator" v-bind:style="{ backgroundColor: yellow ? 'yellow' : 'rgba(255, 255, 0, 0.1)'}"></div>
+        <div class="indicator" v-bind:style="{ backgroundColor: green ? 'green' : 'rgba(0, 255, 0, 0.1)'}"></div>
     </div>
 </div>
 <script>
@@ -51,29 +51,29 @@
 
     const client = new TrafficLightClient('http://localhost:8080');
 
-    const COMMAND_RED = 'красный';
-    const COMMAND_YELLOW = 'жёлтый';
-    const COMMAND_GREEN = 'зеленый';
-
-    window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
-    recognition.interimResults = true;
-    // recognition.lang = 'en-US';
-    recognition.lang = 'ru-RU';
-
-    recognition.addEventListener('result', async e => {
-        const transcript = Array.from(e.results)
-            .map(result => result[0])
-            .map(result => result.transcript)
-            .join('');
-        if (e.results[0].isFinal) {
-            console.log(transcript);
-            await handleVoiceCommand(transcript.toLocaleString().trim(), client);
-        }
-    });
-
-    recognition.addEventListener('end', recognition.start);
-    recognition.start();
+    // const COMMAND_RED = 'красный';
+    // const COMMAND_YELLOW = 'жёлтый';
+    // const COMMAND_GREEN = 'зеленый';
+    //
+    // window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    // const recognition = new SpeechRecognition();
+    // recognition.interimResults = true;
+    // // recognition.lang = 'en-US';
+    // recognition.lang = 'ru-RU';
+    //
+    // recognition.addEventListener('result', async e => {
+    //     const transcript = Array.from(e.results)
+    //         .map(result => result[0])
+    //         .map(result => result.transcript)
+    //         .join('');
+    //     if (e.results[0].isFinal) {
+    //         console.log(transcript);
+    //         await handleVoiceCommand(transcript.toLocaleString().trim(), client);
+    //     }
+    // });
+    //
+    // recognition.addEventListener('end', recognition.start);
+    // recognition.start();
 
 </script>
 
