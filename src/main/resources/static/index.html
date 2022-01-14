@@ -1,12 +1,19 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title>Traffic Light Voice Control</title>
+    <title>Traffic Light - Voice Control</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script src="https://unpkg.com/vue@3.2.26"></script>
+    <link rel="stylesheet" href="css/styles.css"></link>
 </head>
 <body>
-<h1>Hello world</h1>
-
+<div class="container">
+    <div class="traffic-light">
+        <div class="indicator red"></div>
+        <div class="indicator yellow"></div>
+        <div class="indicator green"></div>
+    </div>
+</div>
 <script>
 
     class TrafficLightClient {
@@ -69,6 +76,8 @@
     recognition.start();
 
 </script>
+
+<script src="/js/script.js"></script>
 
 </body>
 </html>
