@@ -1,23 +1,33 @@
 class TrafficLightClient {
     constructor(baseUrl) {
-        this.baseUrl = baseUrl;
+        this.baseUrl = baseUrl
     }
 
     async getTrafficLightState() {
-        const res = await fetch(`${this.baseUrl}/api/traffic-light/state`);
-        return res.json();
+        try {
+            const res = await fetch(`${this.baseUrl}/api/traffic-light/state`)
+            return res.json()
+        } catch (e) {
+            console.error(e)
+            return JSON.stringify(e)
+        }
     }
 
     async setTrafficLightState(red, yellow, green) {
         const data = {red, yellow, green}
-        const res = await fetch(`${this.baseUrl}/api/traffic-light/state`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-        return res.json()
+        try {
+            const res = await fetch(`${this.baseUrl}/api/traffic-light/state`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            return res.json()
+        } catch (e) {
+            console.error(e)
+            return JSON.stringify(e)
+        }
     }
 }
 
@@ -73,7 +83,9 @@ class TrafficLightStateMachine {
         this.stop()
         this.state = this.initialState
         this.stateChangedCallback(this.state)
-        this.timerHandle = setTimeout(() => { this.next() }, this.transitions[this.state].delay)
+        this.timerHandle = setTimeout(() => {
+            this.next()
+        }, this.transitions[this.state].delay)
         this.started = true;
     }
 
@@ -82,7 +94,9 @@ class TrafficLightStateMachine {
 
         this.state = this.transitions[this.state].next
         this.stateChangedCallback(this.state)
-        this.timerHandle = setTimeout(() => { this.next() }, this.transitions[this.state].delay)
+        this.timerHandle = setTimeout(() => {
+            this.next()
+        }, this.transitions[this.state].delay)
     }
 
     stop() {
@@ -109,15 +123,22 @@ const TrafficLight = {
         const COMMAND_GREEN = 'зелёный';
         const COMMAND_TRAFFIC_LIGHT = 'светофор';
 
+        const setState = (r, y, g) => {
+            this.red = r;
+            this.yellow = y;
+            this.green = g;
+            client.setTrafficLightState(r, y, g).catch(console.log);
+        }
+
         const stateMachine = new TrafficLightStateMachine(state => {
             if (state === 'red') {
-                this.red = true; this.yellow = false; this.green = false;
+                setState(true, false, false)
             } else if (state === 'redYellow') {
-                this.red = true; this.yellow = true; this.green = false;
+                setState(true, true, false)
             } else if (state == 'yellow') {
-                this.red = false; this.yellow = true; this.green = false;
+                setState(false, true, false)
             } else if (state === 'green') {
-                this.red = false; this.yellow = false; this.green = true;
+                setState(false, false, true)
             } else {
                 throw new Error(`Unsupported state: ${state}`)
             }
@@ -130,13 +151,13 @@ const TrafficLight = {
             this.commandsHtml = this.commands.join('<br/>');
             if (command == COMMAND_RED) {
                 stateMachine.stop()
-                this.red = true; this.yellow = false; this.green = false;
+                setState(true, false, false)
             } else if (command == COMMAND_YELLOW) {
                 stateMachine.stop()
-                this.red = false; this.yellow = true; this.green = false;
+                setState(false, true, false)
             } else if (command == COMMAND_GREEN) {
                 stateMachine.stop()
-                this.red = false; this.yellow = false; this.green = true;
+                setState(false, false, true)
             } else if (command == COMMAND_TRAFFIC_LIGHT) {
                 stateMachine.start()
             }
