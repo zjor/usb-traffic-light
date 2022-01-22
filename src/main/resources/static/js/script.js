@@ -44,8 +44,51 @@ function startSpeechRecognition(handler) {
     recognition.start();
 }
 
-class FSM {
-    constructor(transitions) {
+class TrafficLightStateMachine {
+    constructor(stateChangedCallback) {
+        this.transitions = {
+            red: {
+                next: 'redYellow',
+                delay: 750
+            },
+            redYellow: {
+                next: 'green',
+                delay: 750
+            },
+            green: {
+                next: 'yellow',
+                delay: 750
+            },
+            yellow: {
+                next: 'red',
+                delay: 750
+            }
+        }
+        this.initialState = 'green'
+        this.started = false
+        this.stateChangedCallback = stateChangedCallback
+    }
+
+    start() {
+        this.stop()
+        this.state = this.initialState
+        this.stateChangedCallback(this.state)
+        this.timerHandle = setTimeout(() => { this.next() }, this.transitions[this.state].delay)
+        this.started = true;
+    }
+
+    next() {
+        console.log(`State: ${this.state}`)
+
+        this.state = this.transitions[this.state].next
+        this.stateChangedCallback(this.state)
+        this.timerHandle = setTimeout(() => { this.next() }, this.transitions[this.state].delay)
+    }
+
+    stop() {
+        if (this.started) {
+            clearTimeout(this.timerHandle);
+        }
     }
 }
 
@@ -66,19 +109,36 @@ const TrafficLight = {
         const COMMAND_GREEN = 'зелёный';
         const COMMAND_TRAFFIC_LIGHT = 'светофор';
 
+        const stateMachine = new TrafficLightStateMachine(state => {
+            if (state === 'red') {
+                this.red = true; this.yellow = false; this.green = false;
+            } else if (state === 'redYellow') {
+                this.red = true; this.yellow = true; this.green = false;
+            } else if (state == 'yellow') {
+                this.red = false; this.yellow = true; this.green = false;
+            } else if (state === 'green') {
+                this.red = false; this.yellow = false; this.green = true;
+            } else {
+                throw new Error(`Unsupported state: ${state}`)
+            }
+        });
+
         startSpeechRecognition(async (command) => {
             const timestamp = (new Date()).toLocaleTimeString()
             this.commands.unshift(`[${timestamp}] ${command}`);
             this.commands = this.commands.splice(0, 14);
             this.commandsHtml = this.commands.join('<br/>');
             if (command == COMMAND_RED) {
+                stateMachine.stop()
                 this.red = true; this.yellow = false; this.green = false;
             } else if (command == COMMAND_YELLOW) {
+                stateMachine.stop()
                 this.red = false; this.yellow = true; this.green = false;
             } else if (command == COMMAND_GREEN) {
+                stateMachine.stop()
                 this.red = false; this.yellow = false; this.green = true;
             } else if (command == COMMAND_TRAFFIC_LIGHT) {
-                // TODO: run fsm
+                stateMachine.start()
             }
         })
     }
