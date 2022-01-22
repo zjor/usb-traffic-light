@@ -3,81 +3,22 @@
 <head>
     <title>Traffic Light - Voice Control</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="icon" type="image/png" href="favicon.png"/>
     <script src="https://unpkg.com/vue@3.2.26"></script>
-    <link rel="stylesheet" href="css/styles.css"></link>
+    <link rel="stylesheet" href="css/styles.css"/>
+
 </head>
 <body>
 <div class="container">
-    <div class="traffic-light" id="traffic-light">
-        <div class="indicator" v-bind:style="{ backgroundColor: red ? 'red' : 'rgba(255, 0, 0, 0.1)'}"></div>
-        <div class="indicator" v-bind:style="{ backgroundColor: yellow ? 'yellow' : 'rgba(255, 255, 0, 0.1)'}"></div>
-        <div class="indicator" v-bind:style="{ backgroundColor: green ? 'green' : 'rgba(0, 255, 0, 0.1)'}"></div>
+    <div id="app">
+        <div class="traffic-light" id="traffic-light">
+            <div class="indicator" v-bind:style="{ backgroundColor: red ? 'red' : 'rgba(255, 0, 0, 0.1)'}"></div>
+            <div class="indicator" v-bind:style="{ backgroundColor: yellow ? 'yellow' : 'rgba(255, 255, 0, 0.1)'}"></div>
+            <div class="indicator" v-bind:style="{ backgroundColor: green ? 'green' : 'rgba(0, 255, 0, 0.1)'}"></div>
+        </div>
+        <div class="last-command" v-text="lastCommand"></div>
     </div>
 </div>
-<script>
-
-    class TrafficLightClient {
-        constructor(baseUrl) {
-            this.baseUrl = baseUrl;
-        }
-
-        async getTrafficLightState() {
-            const res = await fetch(`${this.baseUrl}/api/traffic-light/state`);
-            return res.json();
-        }
-
-        async setTrafficLightState(red, yellow, green) {
-            const data = {red, yellow, green}
-            const res = await fetch(`${this.baseUrl}/api/traffic-light/state`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            });
-            return res.json()
-        }
-    }
-
-    async function handleVoiceCommand(command, client) {
-        if (command == COMMAND_RED) {
-            await client.setTrafficLightState(true, false, false);
-        } else if (command == COMMAND_YELLOW) {
-            await client.setTrafficLightState(false, true, false);
-        } else if (command == COMMAND_GREEN) {
-            await client.setTrafficLightState(false, false, true);
-        }
-    }
-
-    const client = new TrafficLightClient('http://localhost:8080');
-
-    // const COMMAND_RED = 'красный';
-    // const COMMAND_YELLOW = 'жёлтый';
-    // const COMMAND_GREEN = 'зеленый';
-    //
-    // window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    // const recognition = new SpeechRecognition();
-    // recognition.interimResults = true;
-    // // recognition.lang = 'en-US';
-    // recognition.lang = 'ru-RU';
-    //
-    // recognition.addEventListener('result', async e => {
-    //     const transcript = Array.from(e.results)
-    //         .map(result => result[0])
-    //         .map(result => result.transcript)
-    //         .join('');
-    //     if (e.results[0].isFinal) {
-    //         console.log(transcript);
-    //         await handleVoiceCommand(transcript.toLocaleString().trim(), client);
-    //     }
-    // });
-    //
-    // recognition.addEventListener('end', recognition.start);
-    // recognition.start();
-
-</script>
-
 <script src="/js/script.js"></script>
-
 </body>
 </html>

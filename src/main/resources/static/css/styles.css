@@ -29,3 +29,10 @@ html, body {
     border: black 3px solid;
     border-radius: 50px;
 }
+
+.last-command {
+    font-family: sans-serif;
+    font-size: 1.5em;
+    padding: 0.5em;
+    text-align: center;
+}
