@@ -36,7 +36,7 @@ function startSpeechRecognition(handler) {
             .map(result => result.transcript)
             .join('');
         if (e.results[0].isFinal) {
-            const command = transcript.toLocaleString().trim();
+            const command = transcript.toLocaleString().trim().toLowerCase();
             await handler(command);
         }
     });
@@ -55,7 +55,8 @@ const TrafficLight = {
             red: false,
             yellow: false,
             green: false,
-            lastCommand: '<none>'
+            commands: [],
+            commandsHtml: 'hello </br> world'
         }
     },
     mounted() {
@@ -66,7 +67,10 @@ const TrafficLight = {
         const COMMAND_TRAFFIC_LIGHT = 'светофор';
 
         startSpeechRecognition(async (command) => {
-            this.lastCommand = command;
+            const timestamp = (new Date()).toLocaleTimeString()
+            this.commands.unshift(`[${timestamp}] ${command}`);
+            this.commands = this.commands.splice(0, 14);
+            this.commandsHtml = this.commands.join('<br/>');
             if (command == COMMAND_RED) {
                 this.red = true; this.yellow = false; this.green = false;
             } else if (command == COMMAND_YELLOW) {
