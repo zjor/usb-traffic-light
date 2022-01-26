@@ -121,7 +121,7 @@ const TrafficLight = {
         const COMMAND_RED = 'красный';
         const COMMAND_YELLOW = 'жёлтый';
         const COMMAND_GREEN = 'зелёный';
-        const COMMAND_TRAFFIC_LIGHT = 'светофор';
+        const COMMAND_TRAFFIC_LIGHT = 'нормально';
 
         const setState = (r, y, g) => {
             this.red = r;
